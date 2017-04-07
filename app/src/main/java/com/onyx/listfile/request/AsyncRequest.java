@@ -11,29 +11,23 @@ import java.util.concurrent.Executors;
  * Created by 12345 on 2017/4/7.
  */
 
-public class AsyncRequest<I, O> {
+public class AsyncRequest<O> {
     public final static int DEFAULT_REQUEST = 0;
     public final static int NATIVE_DATA_REQUEST = 1;
     public final static int REMOTE_DATA_REQUEST = 2;
 
     private static Handler handler;
-    private RequestCallback<I, O> callback;
+    private RequestCallback<O> callback;
     private int requestType = 0;
-    private I i;
     private static ExecutorService executorService = Executors.newFixedThreadPool(15);
 
-    public AsyncRequest(int requestType, I i, RequestCallback<I, O> callback) {
+    public AsyncRequest(int requestType, RequestCallback<O> callback) {
         this.requestType = requestType;
         this.callback = callback;
-        this.i = i;
-    }
-
-    public AsyncRequest(int requestType, RequestCallback<I, O> callback) {
-        new AsyncRequest(requestType, new Object(), callback);
     }
 
     public void execute() {
-        callback.onStart(i);
+        callback.onStart();
         run();
     }
 
@@ -45,7 +39,7 @@ public class AsyncRequest<I, O> {
                 @Override
                 public void run() {
                     Message message = Message.obtain();
-                    message.obj = new ResultData<O>(AsyncRequest.this, callback.onDoInBackground(i));
+                    message.obj = new ResultData<O>(AsyncRequest.this, callback.onDoInBackground());
                     getHandler().sendMessage(message);
                 }
             });

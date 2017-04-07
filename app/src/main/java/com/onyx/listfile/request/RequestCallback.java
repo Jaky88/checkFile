@@ -4,12 +4,12 @@ package com.onyx.listfile.request;
  * Created by 12345 on 2017/4/7.
  */
 
-public abstract class RequestCallback<I,O> {
+public abstract class RequestCallback<O> {
 
-    public void onStart(I i) {
+    public void onStart() {
     }
 
-    public abstract O onDoInBackground(I i);
+    public abstract O onDoInBackground();
 
     public void onResult(O o) {
     }
